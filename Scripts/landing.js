@@ -420,7 +420,7 @@ function addNavLink(text, num) {
     var a = document.createElement('a');
     var t = document.createTextNode(text + ' ');
     a.appendChild(t);
-    a.href = text + '.html';
+    a.href = text.toLowerCase() + '.html';
     a.style.left = width / 2 - 88 + 'px';
     a.style.top = height / 2 - 96 + 20*num + 'px';
     a.style.position = "absolute";
