@@ -12,7 +12,6 @@ function addHead(){
 	addLink('Invasion');
 	addLink('Nbody');
 	addLink('HundredsClone');
-	addLink('SnakePong');
 	
 	var hellWeek = document.createElement('a');
 	var hellWeekText = document.createTextNode('Hell Week by 8bitgames');
@@ -25,6 +24,6 @@ function addLink(text){
 	var a = document.createElement('a');
 	var t = document.createTextNode(text + ' ');
 	a.appendChild(t);
-	a.href = text.toLowerCase() + '.html';
+	a.href = 'enzosv.github.io/'+text.toLowerCase();
 	body.appendChild(a);
 }
