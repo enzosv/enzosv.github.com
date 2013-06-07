@@ -14,6 +14,8 @@ var maxSpeed;
 var delta;
 var old;
 
+var score;
+
 function Ball(){
 	this.radius = width*height*0.00001;
 	this.center = new Vector(width*0.5, this.radius);
@@ -40,20 +42,10 @@ function Ball(){
 				}
 
 				if(Key.isDown(Key.W)){
-					if(this.vertical != -1){
-						this.speedY -= delta*this.accelerationY*4;
-						if(this.speedY < 0){
-							this.vertical = -1;
-						}
-					}
+					reduceSpeedY(this, -1);
 				}
 				else{
-					if(this.vertical != 1){
-						this.speedY -= delta*this.accelerationY*4;
-						if(this.speedY < 0){
-							this.vertical = 1;
-						}
-					}
+					reduceSpeedY(this, 1);
 				}
 			}
 			else{
@@ -72,20 +64,10 @@ function Ball(){
 					}
 				}
 				if(Key.isDown(Key.A)){
-					if(this.horizontal != -1){
-						this.speedX -= delta*this.accelerationX*4;
-						if(this.speedX < 0){
-							this.horizontal = -1;
-						}
-					}
+					reduceSpeedX(this, -1);
 				}
 				else{
-					if(this.horizontal != 1){
-						this.speedX -= delta*this.accelerationX*4;
-						if(this.speedX < 0){
-							this.horizontal = 1;
-						}
-					}
+					reduceSpeedX(this, 1);
 				}
 			}
 			else{
@@ -106,20 +88,10 @@ function Ball(){
 				}
 
 				if(Key.isDown(Key.UP)){
-					if(this.vertical != -1){
-						this.speedY -= delta*this.accelerationY*4;
-						if(this.speedY < 0){
-							this.vertical = -1;
-						}
-					}
+					reduceSpeedY(this, -1);
 				}
 				else{
-					if(this.vertical != 1){
-						this.speedY -= delta*this.accelerationY*4;
-						if(this.speedY < 0){
-							this.vertical = 1;
-						}
-					}
+					reduceSpeedY(this, 1);
 				}
 			}
 			else{
@@ -138,20 +110,10 @@ function Ball(){
 					}
 				}
 				if(Key.isDown(Key.LEFT)){
-					if(this.horizontal != -1){
-						this.speedX -= delta*this.accelerationX*4;
-						if(this.speedX < 0){
-							this.horizontal = -1;
-						}
-					}
+					reduceSpeedX(this, -1);
 				}
 				else{
-					if(this.horizontal != 1){
-						this.speedX -= delta*this.accelerationX*4;
-						if(this.speedX < 0){
-							this.horizontal = 1;
-						}
-					}
+					reduceSpeedX(this, 1);
 				}
 			}
 			else{
@@ -199,19 +161,13 @@ function Ball(){
 		this.boundWall();
 	}
 }
+
 function Guard(){
 	this.center = new Vector(width*0.5, height*0.5);
 	this.speed = width * 0.25;
 	this.halfWidth = width*0.125;
 	this.halfHeight = height * 0.005;
 	this.prisoner = prisoners[0];
-	this.select = function(){
-		for(var i = 0; i<prisoners.length; i++){
-			if(this.center.distance(this.prisoner.center) > this.center.distance(prisoners[i].center)){
-				this.prisoner = prisoners[i];
-			}
-		}
-	}
 	this.move = function(){
 		if(Math.abs(this.prisoner.center.x - this.center.x) > this.prisoner.radius){
 			if(this.prisoner.center.x < this.center.x){
@@ -232,7 +188,7 @@ function Guard(){
 	}
 	this.update = function(){
 		if(prisoners.length > 1){
-			this.select();
+			selectPrisoner(this);
 		}
 		this.move();
 		this.bound();
@@ -248,14 +204,6 @@ function Guard2(){
 	this.halfWidth = height * 0.005;
 	this.halfHeight = width*0.125;
 	this.prisoner = prisoners[0];
-	this.select = function(){
-		for(var i = 0; i<prisoners.length; i++){
-			if(this.center.distance(this.prisoner.center) > this.center.distance(prisoners[i].center)){
-				this.prisoner = prisoners[i];
-
-			}
-		}
-	}
 	this.move = function(){
 		if(Math.abs(this.prisoner.center.y - this.center.y) > this.prisoner.radius){
 			if(this.prisoner.center.y < this.center.y){
@@ -276,7 +224,7 @@ function Guard2(){
 	}
 	this.update = function(){
 		if(prisoners.length > 1){
-			this.select();
+			selectPrisoner(this);
 		}
 		this.move();
 		this.bound();
@@ -313,6 +261,7 @@ function init(){
 	width = window.innerWidth - 15;
 	height = window.innerHeight - 45;
 	maxSpeed = width*height*0.0005;
+	score = 0;
 	initCanvas();
 	gameObjects = [];
 	guards = [];
@@ -382,4 +331,30 @@ function gameLoop(){
 	update();
 	draw();
 	requestAnimFrame(gameLoop);
+}
+
+function reduceSpeedX(object, direction){
+	if(object.horizontal != direction){
+		object.speedX -= delta*object.accelerationX*4;
+		if(object.speedX < 0){
+			object.horizontal = direction;
+		}
+	}
+}
+
+function reduceSpeedY(object, direction){
+	if(object.vertical != direction){
+		object.speedY -= delta*object.accelerationY*4;
+		if(object.speedY < 0){
+			object.vertical = direction;
+		}
+	}
+}
+
+function selectPrisoner(object){
+	for(var i = 0; i<prisoners.length; i++){
+		if(object.center.distance(object.prisoner.center) > object.center.distance(prisoners[i].center)){
+			object.prisoner = prisoners[i];
+		}
+	}
 }
