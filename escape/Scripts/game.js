@@ -5,6 +5,8 @@ var canvas;
 var ctx;
 
 var gameObjects;
+var guards;
+var prisoners;
 
 var ball;
 var maxSpeed;
@@ -111,14 +113,12 @@ function Ball(){
 		}
 	}
 	this.collide = function(){
-		for(var i = 0; i<gameObjects.length; i++){
-			if(gameObjects[i].tag === "guard"){
-				var g = gameObjects[i];
-				if (this.center.y +this.radius >= g.center.y - g.halfHeight && this.center.y - this.radius <= g.center.y + g.halfHeight){
-					if (this.center.x +this.radius >= g.center.x - g.halfWidth && this.center.x - this.radius <= g.center.x + g.halfWidth){
-						this.center.x = width *0.5;
-						this.center.y = this.radius;
-					}
+		for(var i = 0; i<guards.length; i++){
+			var g = guards[i];
+			if (this.center.y +this.radius >= g.center.y - g.halfHeight && this.center.y - this.radius <= g.center.y + g.halfHeight){
+				if (this.center.x +this.radius >= g.center.x - g.halfWidth && this.center.x - this.radius <= g.center.x + g.halfWidth){
+					this.center.x = width *0.5;
+					this.center.y = this.radius;
 				}
 			}
 		}
@@ -135,13 +135,20 @@ function Guard(){
 	this.speed = width * 0.25;
 	this.halfWidth = width*0.125;
 	this.halfHeight = height * 0.005;
-	this.tag = "guard";
+	this.prisoner = prisoners[0];
+	this.select = function(){
+		for(var i = 0; i<prisoners.length; i++){
+			if(this.center.distance(this.prisoner) < this.center.distance(prisoners[i])){
+				this.prisoner = prisoner[i];
+			}
+		}
+	}
 	this.move = function(){
-		if(Math.abs(gameObjects[0].center.x - this.center.x) > gameObjects[0].radius){
-			if(gameObjects[0].center.x < this.center.x){
+		if(Math.abs(this.prisoner.center.x - this.center.x) > this.prisoner.radius){
+			if(this.prisoner.center.x < this.center.x){
 				this.center.x -= delta*this.speed;
 			}
-			else if(gameObjects[0].center.x > this.center.x){
+			else if(this.prisoner.center.x > this.center.x){
 				this.center.x += delta*this.speed;
 			}
 		}
@@ -155,6 +162,9 @@ function Guard(){
 		}
 	}
 	this.update = function(){
+		if(prisoners.length > 1){
+			this.select();
+		}
 		this.move();
 		this.bound();
 	}
@@ -168,13 +178,20 @@ function Guard2(){
 	this.speed = height * 0.25;
 	this.halfWidth = height * 0.005;
 	this.halfHeight = width*0.125;
-	this.tag = "guard";
+	this.prisoner = prisoners[0];
+	this.select = function(){
+		for(var i = 0; i<prisoners.length; i++){
+			if(this.center.distance(this.prisoner) < this.center.distance(prisoners[i])){
+				this.prisoner = prisoner[i];
+			}
+		}
+	}
 	this.move = function(){
-		if(Math.abs(gameObjects[0].center.y - this.center.y) > gameObjects[0].radius){
-			if(gameObjects[0].center.y < this.center.y){
+		if(Math.abs(this.prisoner.center.y - this.center.y) > this.prisoner.radius){
+			if(this.prisoner.center.y < this.center.y){
 				this.center.y -= delta*this.speed;
 			}
-			else if(gameObjects[0].center.y > this.center.y){
+			else if(this.prisoner.center.y > this.center.y){
 				this.center.y += delta*this.speed;
 			}
 		}
@@ -188,6 +205,9 @@ function Guard2(){
 		}
 	}
 	this.update = function(){
+		if(prisoners.length > 1){
+			this.select();
+		}
 		this.move();
 		this.bound();
 	}
@@ -225,13 +245,18 @@ function init(){
 	maxSpeed = width*height*0.0005;
 	initCanvas();
 	gameObjects = [];
-	gameObjects[0] = new Ball();
-	for(var i = 1; i< 6; i++){
-		gameObjects[i] = new Guard();
-		gameObjects[i].center.y = height*(0.1+0.2*(i-1));
-	}
-	gameObjects[6] = new Guard2();
+	guards = [];
+	prisoners = [];
+	prisoners[0] = new Ball();
+	gameObjects.push(prisoners[0]);
 
+	for(var i = 0; i< 5; i++){
+		guards[i] = new Guard();
+		guards[i].center.y = height*(0.1+0.2*i);
+		gameObjects.push(guards[i]);
+	}
+	guards[5] = new Guard2();
+	gameObjects.push(guards[5]);
 
 	window.addEventListener('keyup', function (event) {
 		Key.onKeyup(event);
@@ -263,9 +288,11 @@ function prepare(){
 }
 
 function update(){
+
 	for(var i = 0; i< gameObjects.length; i++){
 		gameObjects[i].update();
 	}
+
 }
 
 function draw(){
