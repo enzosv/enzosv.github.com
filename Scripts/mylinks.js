@@ -14,6 +14,7 @@ function addHead(){
 
 	addLink('Pong');
 	addLink('Invasion');
+	addLink('Escape');
 	addLink('Nbody');
 	addLink('HundredsClone');
 	

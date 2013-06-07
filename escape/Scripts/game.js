@@ -114,17 +114,6 @@ function Ball(){
 		for(var i = 0; i<gameObjects.length; i++){
 			if(gameObjects[i].tag === "guard"){
 				var g = gameObjects[i];
-				// alert(g.halfWidth);
-				// if(this.center.y + this.radius >= gameObjects[i].center.y + gameObjects[i].halfHeight){
-				// 	if(this.center.y - this.radius <= gameObjects[i].center.y - gameObjects[i].halfHeight){
-				// 		//if(this.center.x + this.radius >= gameObjects[i].center.x + gameObjects[i].halfWidth){
-				// 			//if(this.center.x - this.radius <= gameObjects[i].center.x - gameObjects[i].halfWidth){
-				// 				this.center.x = width*0.5;
-				// 				this.center.y = height*0.5;
-				// 			//}
-				// 		//}
-				// 	}
-				// }
 				if (this.center.y +this.radius >= g.center.y + g.halfHeight && this.center.y - this.radius <= g.center.y - g.halfHeight){
 					if (this.center.x +this.radius >= g.center.x - g.halfWidth && this.center.x - this.radius <= g.center.x + g.halfWidth){
 						this.center.x = width *0.5;
@@ -148,7 +137,7 @@ function Guard(){
 	this.halfHeight = height * 0.005;
 	this.tag = "guard";
 	this.update = function(){
-		if(Math.abs(gameObjects[0].center.x - this.center.x) > gameObjects[0].radius)
+		if(Math.abs(gameObjects[0].center.x - this.center.x) > gameObjects[0].radius){
 			if(gameObjects[0].center.x < this.center.x){
 				this.center.x -= delta*this.speed;
 			}
@@ -160,82 +149,84 @@ function Guard(){
 			ctx.fillRect(this.center.x - this.halfWidth, this.center.y - this.halfHeight, this.halfWidth*2, this.halfHeight*2);
 		}
 	}
-	var Key = {
-		pressed: {},
-		UP: 38,
-		DOWN: 40,
-		LEFT: 37,
-		RIGHT: 39,
-		W: 87,
-		S: 83,
-		A: 65,
-		D: 68,
-		isDown: function (keyCode) {
-			return this.pressed[keyCode];
-		},
-		onKeydown: function (e) {
-			this.pressed[e.keyCode] = true;
-		},
-		onKeyup: function (e) {
-			delete this.pressed[e.keyCode];
-		}
+}
+
+var Key = {
+	pressed: {},
+	UP: 38,
+	DOWN: 40,
+	LEFT: 37,
+	RIGHT: 39,
+	W: 87,
+	S: 83,
+	A: 65,
+	D: 68,
+	isDown: function (keyCode) {
+		return this.pressed[keyCode];
+	},
+	onKeydown: function (e) {
+		this.pressed[e.keyCode] = true;
+	},
+	onKeyup: function (e) {
+		delete this.pressed[e.keyCode];
 	}
+}
 
-	function init(){
-		old = Date.now();
-		delta = 0;
-		width = window.innerWidth - 15;
-		height = window.innerHeight - 45;
-		maxSpeed = width*height*0.0005;
-		initCanvas();
-		gameObjects = [];
-		gameObjects[0] = new Ball();
-		gameObjects[1] = new Guard();
+function init(){
+	old = Date.now();
+	delta = 0;
+	width = window.innerWidth - 15;
+	height = window.innerHeight - 45;
+	maxSpeed = width*height*0.0005;
+	initCanvas();
+	gameObjects = [];
+	gameObjects[0] = new Ball();
+	gameObjects[1] = new Guard();
 
-		window.addEventListener('keyup', function (event) {
-			Key.onKeyup(event);
-		}, false);
-		window.addEventListener('keydown', function (event) {
-			Key.onKeydown(event);
-		}, false);
+	window.addEventListener('keyup', function (event) {
+		Key.onKeyup(event);
+	}, false);
+	window.addEventListener('keydown', function (event) {
+		Key.onKeydown(event);
+	}, false);
 
+}
+
+function initCanvas(){
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	ctx = canvas.getContext('2d');
+	setCanvas();
+}
+
+function setCanvas(){
+	canvas.width = width;
+	canvas.height = height;
+	canvas.setAttribute("style", "border: 1px solid white;");
+	ctx.fillStyle = "rgb(255,255,255)";
+}
+
+function prepare(){
+	delta = (Date.now() - old)/1000;
+	old = Date.now();
+	ctx.clearRect(0,0,width, height);
+}
+
+function update(){
+	for(var i = 0; i< gameObjects.length; i++){
+		gameObjects[i].update();
 	}
+}
 
-	function initCanvas(){
-		canvas = document.createElement('canvas');
-		document.body.appendChild(canvas);
-		ctx = canvas.getContext('2d');
-		setCanvas();
+function draw(){
+	for(var i = 0; i< gameObjects.length; i++){
+		gameObjects[i].draw();
 	}
+}
 
-	function setCanvas(){
-		canvas.width = width;
-		canvas.height = height;
-		canvas.setAttribute("style", "border: 1px solid white;");
-		ctx.fillStyle = "rgb(255,255,255)";
-	}
-
-	function prepare(){
-		delta = (Date.now() - old)/1000;
-		old = Date.now();
-		ctx.clearRect(0,0,width, height);
-	}
-
-	function update(){
-		for(var i = 0; i< gameObjects.length; i++){
-			gameObjects[i].update();
-		}
-	}
-
-	function draw(){
-		for(var i = 0; i< gameObjects.length; i++){
-			gameObjects[i].draw();
-		}
-	}
-
-	function gameLoop(){
-		prepare();
-		update();
-		draw();
-		requestAnimFrame(gameLoop);
-	}
+function gameLoop(){
+	prepare();
+	update();
+	draw();
+	requestAnimFrame(gameLoop);
+}
