@@ -204,6 +204,13 @@ function Guard2(){
 	this.halfWidth = height * 0.005;
 	this.halfHeight = width*0.125;
 	this.prisoner = prisoners[0];
+	this.select = function(){
+		for(var i = 0; i<prisoners.length; i++){
+			if(this.center.distance(this.prisoner.center) > this.center.distance(prisoners[i].center)){
+				this.prisoner = prisoners[i];
+			}
+		}
+	}
 	this.move = function(){
 		if(Math.abs(this.prisoner.center.y - this.center.y) > this.prisoner.radius){
 			if(this.prisoner.center.y < this.center.y){
@@ -224,7 +231,7 @@ function Guard2(){
 	}
 	this.update = function(){
 		if(prisoners.length > 1){
-			selectPrisoner(this);
+			this.select();
 		}
 		this.move();
 		this.bound();
@@ -352,9 +359,14 @@ function reduceSpeedY(object, direction){
 }
 
 function selectPrisoner(object){
+	var distFromClosest = 2000;
 	for(var i = 0; i<prisoners.length; i++){
-		if(object.center.distance(object.prisoner.center) > object.center.distance(prisoners[i].center)){
-			object.prisoner = prisoners[i];
+		if(Math.abs(prisoners[i].center.y-object.center.y) < height*0.2){
+			var distToCompare = object.center.distance(prisoners[i].center);
+			if (distToCompare < distFromClosest) {
+				object.prisoner = this.prisoners[i];
+				distFromClosest = distToCompare;
+			}
 		}
 	}
 }
