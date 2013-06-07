@@ -13,8 +13,8 @@ var delta;
 var old;
 
 function Ball(){
-	this.center = new Vector(width*0.5, height*0.5);
 	this.radius = width*height*0.00001;
+	this.center = new Vector(width*0.5, this.radius);
 	this.image = new Image();
 	this.image.src = 'Images/ball.png';
 	this.speedX = 0;
@@ -114,10 +114,10 @@ function Ball(){
 		for(var i = 0; i<gameObjects.length; i++){
 			if(gameObjects[i].tag === "guard"){
 				var g = gameObjects[i];
-				if (this.center.y +this.radius >= g.center.y + g.halfHeight && this.center.y - this.radius <= g.center.y - g.halfHeight){
+				if (this.center.y +this.radius >= g.center.y - g.halfHeight && this.center.y - this.radius <= g.center.y + g.halfHeight){
 					if (this.center.x +this.radius >= g.center.x - g.halfWidth && this.center.x - this.radius <= g.center.x + g.halfWidth){
 						this.center.x = width *0.5;
-						this.center.y = height *0.5;
+						this.center.y = this.radius;
 					}
 				}
 			}
@@ -131,12 +131,12 @@ function Ball(){
 	}
 }
 function Guard(){
-	this.center = new Vector(width*0.5, height*0.95);
+	this.center = new Vector(width*0.5, height*0.5);
 	this.speed = width * 0.25;
 	this.halfWidth = width*0.125;
 	this.halfHeight = height * 0.005;
 	this.tag = "guard";
-	this.update = function(){
+	this.move = function(){
 		if(Math.abs(gameObjects[0].center.x - this.center.x) > gameObjects[0].radius){
 			if(gameObjects[0].center.x < this.center.x){
 				this.center.x -= delta*this.speed;
@@ -145,9 +145,54 @@ function Guard(){
 				this.center.x += delta*this.speed;
 			}
 		}
-		this.draw = function(){
-			ctx.fillRect(this.center.x - this.halfWidth, this.center.y - this.halfHeight, this.halfWidth*2, this.halfHeight*2);
+	}
+	this.bound = function(){
+		if(this.center.x - this.halfWidth < 0){
+			this.center.x = this.halfWidth;
 		}
+		else if(this.center.x + this.halfWidth > width){
+			this.center.x = width - this.halfWidth;
+		}
+	}
+	this.update = function(){
+		this.move();
+		this.bound();
+	}
+	this.draw = function(){
+		ctx.fillRect(this.center.x - this.halfWidth, this.center.y - this.halfHeight, this.halfWidth*2, this.halfHeight*2);
+	}
+}
+
+function Guard2(){
+	this.center = new Vector(width*0.5, height*0.5);
+	this.speed = height * 0.25;
+	this.halfWidth = height * 0.005;
+	this.halfHeight = width*0.125;
+	this.tag = "guard";
+	this.move = function(){
+		if(Math.abs(gameObjects[0].center.y - this.center.y) > gameObjects[0].radius){
+			if(gameObjects[0].center.y < this.center.y){
+				this.center.y -= delta*this.speed;
+			}
+			else if(gameObjects[0].center.y > this.center.y){
+				this.center.y += delta*this.speed;
+			}
+		}
+	}
+	this.bound = function(){
+		if(this.center.y - this.halfHeight < height*0.1){
+			this.center.y = height*0.1 + this.halfHeight;
+		}
+		else if(this.center.y + this.halfHeight > height*0.9){
+			this.center.y = height*0.9 - this.halfHeight;
+		}
+	}
+	this.update = function(){
+		this.move();
+		this.bound();
+	}
+	this.draw = function(){
+		ctx.fillRect(this.center.x - this.halfWidth, this.center.y - this.halfHeight, this.halfWidth*2, this.halfHeight*2);
 	}
 }
 
@@ -181,7 +226,12 @@ function init(){
 	initCanvas();
 	gameObjects = [];
 	gameObjects[0] = new Ball();
-	gameObjects[1] = new Guard();
+	for(var i = 1; i< 6; i++){
+		gameObjects[i] = new Guard();
+		gameObjects[i].center.y = height*(0.1+0.2*(i-1));
+	}
+	gameObjects[6] = new Guard2();
+
 
 	window.addEventListener('keyup', function (event) {
 		Key.onKeyup(event);
