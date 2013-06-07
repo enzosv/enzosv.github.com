@@ -34,94 +34,54 @@ function Ball(){
 	this.control = function(){
 		if(this.p === 1){
 			if(Key.isDown(Key.W) || Key.isDown(Key.S)){
-				if(this.speedY < maxSpeed){
-					this.speedY += delta*this.accelerationY;
-					if(this.speedY > maxSpeed){
-						this.speedY = maxSpeed;
-					}
-				}
-
+				speedUpY(this);
 				if(Key.isDown(Key.W)){
-					reduceSpeedY(this, -1);
+					changeDirY(this, -1);
 				}
 				else{
-					reduceSpeedY(this, 1);
+					changeDirY(this, 1);
 				}
 			}
 			else{
-				this.speedY -= delta*this.accelerationY*2;
-				if(this.speedY < 0){
-					this.speedY = 0;
-					this.vertical = 0;
-				}
+				slowDownY(this);
 			}
-
 			if(Key.isDown(Key.A)|| Key.isDown(Key.D)){
-				if(this.speedX < maxSpeed){
-					this.speedX += delta*this.accelerationX;
-					if(this.speedX > maxSpeed){
-						this.speedX = maxSpeed;
-					}
-				}
+				speedUpX(this);
 				if(Key.isDown(Key.A)){
-					reduceSpeedX(this, -1);
+					changeDirX(this, -1);
 				}
 				else{
-					reduceSpeedX(this, 1);
+					changeDirX(this, 1);
 				}
 			}
 			else{
-				this.speedX -= delta*this.accelerationX*2;
-				if(this.speedX < 0){
-					this.speedX = 0;
-					this.horizontal = 0;
-				}
+				slowDownX(this);
 			}
 		}
 		else if(this.p === 2){
 			if(Key.isDown(Key.UP) || Key.isDown(Key.DOWN)){
-				if(this.speedY < maxSpeed){
-					this.speedY += delta*this.accelerationY;
-					if(this.speedY > maxSpeed){
-						this.speedY = maxSpeed;
-					}
-				}
-
+				speedUpY(this);
 				if(Key.isDown(Key.UP)){
-					reduceSpeedY(this, -1);
+					changeDirY(this, -1);
 				}
 				else{
-					reduceSpeedY(this, 1);
+					changeDirY(this, 1);
 				}
 			}
 			else{
-				this.speedY -= delta*this.accelerationY*2;
-				if(this.speedY < 0){
-					this.speedY = 0;
-					this.vertical = 0;
-				}
+				slowDownY(this);
 			}
-
 			if(Key.isDown(Key.LEFT) || Key.isDown(Key.RIGHT)){
-				if(this.speedX < maxSpeed){
-					this.speedX += delta*this.accelerationX;
-					if(this.speedX > maxSpeed){
-						this.speedX = maxSpeed;
-					}
-				}
+				speedUpX(this);
 				if(Key.isDown(Key.LEFT)){
-					reduceSpeedX(this, -1);
+					changeDirX(this, -1);
 				}
 				else{
-					reduceSpeedX(this, 1);
+					changeDirX(this, 1);
 				}
 			}
 			else{
-				this.speedX -= delta*this.accelerationX*2;
-				if(this.speedX < 0){
-					this.speedX = 0;
-					this.horizontal = 0;
-				}
+				slowDownX(this);
 			}
 		}
 	}
@@ -340,24 +300,6 @@ function gameLoop(){
 	requestAnimFrame(gameLoop);
 }
 
-function reduceSpeedX(object, direction){
-	if(object.horizontal != direction){
-		object.speedX -= delta*object.accelerationX*4;
-		if(object.speedX < 0){
-			object.horizontal = direction;
-		}
-	}
-}
-
-function reduceSpeedY(object, direction){
-	if(object.vertical != direction){
-		object.speedY -= delta*object.accelerationY*4;
-		if(object.speedY < 0){
-			object.vertical = direction;
-		}
-	}
-}
-
 function selectPrisoner(object){
 	var distFromClosest = 2000;
 	for(var i = 0; i<prisoners.length; i++){
@@ -368,5 +310,57 @@ function selectPrisoner(object){
 				distFromClosest = distToCompare;
 			}
 		}
+	}
+}
+
+function changeDirX(object, direction) {
+	if (object.horizontal != direction) {
+		object.speedX -= delta * object.accelerationX * 4;
+		if (object.speedX < 0) {
+			object.horizontal = direction;
+		}
+	}
+}
+
+function changeDirY(object, direction) {
+	if (object.vertical != direction) {
+		object.speedY -= delta * object.accelerationY * 4;
+		if (object.speedY < 0) {
+			object.vertical = direction;
+		}
+	}
+}
+
+function speedUpX(object) {
+	if (object.speedX < maxSpeed) {
+		object.speedX += delta * object.accelerationX;
+		if (object.speedX > maxSpeed) {
+			object.speedX = maxSpeed;
+		}
+	}
+}
+
+function speedUpY(object) {
+	if (object.speedY < maxSpeed) {
+		object.speedY += delta * object.accelerationY;
+		if (object.speedY > maxSpeed) {
+			object.speedY = maxSpeed;
+		}
+	}
+}
+
+function slowDownY(object) {
+	object.speedY -= delta*object.accelerationY*2;
+	if(object.speedY < 0){
+		object.speedY = 0;
+		object.vertical = 0;
+	}
+}
+
+function slowDownX(object) {
+	object.speedX -= delta*object.accelerationX*2;
+	if(object.speedX < 0){
+		object.speedX = 0;
+		object.horizontal = 0;
 	}
 }
