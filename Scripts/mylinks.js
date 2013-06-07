@@ -24,6 +24,6 @@ function addLink(text){
 	var a = document.createElement('a');
 	var t = document.createTextNode(text + ' ');
 	a.appendChild(t);
-	a.href = text.toLowerCase();
+	a.href = '/'+text.toLowerCase();
 	body.appendChild(a);
 }
