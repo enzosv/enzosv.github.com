@@ -34,35 +34,29 @@ function main(){
 function init(){
 	initTime();
 	images = [];
+
 	loadCounter = 0;
 	canAddImage = false;
 	imageCount = prefs.imageCount;
-	var loadNew = true;
+
 	for(var i = 0; i< imageCount; i++){
 		images[i] = new Image();
 		images[i].src = (i+1) + '.jpg';
 		images[i].caption = captions[i];
 		images[i].addEventListener("load", function () {
 			loadCounter++;
+
 			if(!canAddImage && loadCounter === imageCount){
 				canAddImage = true;
-				addImage(Math.floor(Math.random()*imageCount))
+				addImage(Math.floor(Math.random()*imageCount));
+
 			}
 		}, false);
-}
-	// if(prefs.awake)
-	// 	status = "awake";
-	// else
-	// 	status = "asleep";
-
+	}
 	whiteColor = prefs.whiteColor;
 
 	createCanvas();
 	resize();
-	// while(localStorage.getItem('endDate')===NaN){
-	// 	changeDate();
-	// }
-	// arrivalTime = localStorage.getItem('endDate');
 }
 
 function initTime(){
@@ -97,6 +91,7 @@ function resize(){
 	cdFontSize = cdWidth*cdHeight*prefs.fontMultiplier;
 
 	setCanvas();
+	addImage(Math.floor(Math.random()*imageCount));
 }
 
 function createCanvas(){
@@ -113,6 +108,7 @@ function createCanvas(){
 	document.body.appendChild(cCanvas);
 }
 function setCanvas(){
+
 	cdCanvas.width = cdWidth;
 	cdCanvas.height = cdHeight;
 	cdCanvas.style.left = width*0.125 + "px";
@@ -138,7 +134,7 @@ function setCanvas(){
 	sCanvas.style.left = width*0.125 + "px";
 	sCanvas.style.top = height*0.38 + "px";
 	sCanvas.style.position = "absolute";
-	sCanvas.style.border = "1px solid white";
+	//sCanvas.style.border = "1px solid white";
 	sCtx = sCanvas.getContext('2d');
 
 	cCanvas.width = cdWidth;
@@ -146,47 +142,61 @@ function setCanvas(){
 	cCanvas.style.left = width*0.125 + "px";
 	cCanvas.style.top = height*0.93 + "px";
 	cCanvas.style.position = "absolute";
-	cCanvas.style.border = "1px solid white";
+	//cCanvas.style.border = "1px solid white";
 	cCtx = cCanvas.getContext('2d');
 	cCtx.fillStyle = whiteColor;
 	cCtx.font = 'normal ' + cdFontSize *0.4 + 'px Lucida Console';
 	cCtx.textAlign = 'center';
 
-	addImage();
 	writeLabel();
 }
 
 function writeLabel(){
+
 	lCtx.fillText("days", labelCanvas.width*0.2, labelCanvas.height*0.9);
 	lCtx.fillText("hours", labelCanvas.width*0.39, labelCanvas.height*0.9);
 	lCtx.fillText("mins", labelCanvas.width*0.577, labelCanvas.height*0.9);
 	lCtx.fillText("secs", labelCanvas.width*0.765, labelCanvas.height*0.9);
+
 }
 
 function addImage(number){
 	//http://stackoverflow.com/questions/2303690/resizing-an-image-in-an-html5-canvas
-
-	var maxWidth = cdWidth*3;
-	var maxHeight = height*0.55*3;
-	var ratio = 1;
-	if(images[number].width > maxWidth){
-		ratio = maxWidth/images[number].width;
-		
-	}	
-	else if(images[number].height > maxHeight){
-		ratio = maxHeight/images[number].height;
-	}
-	images[number].width = width*ratio;
-	images[number].height = height*ratio;
+	var maxWidth = cdWidth;
+	var maxHeight = height*0.55;
+	var wRatio = 1;
+	var hRatio = 1;
+	//erase
 	sCtx.clearRect(0,0,sCanvas.width, sCanvas.height);
 	cCtx.clearRect(0,0,cCanvas.width, cCanvas.height);
+
+	//resize
+	if(images[number].width > maxWidth)
+	{
+		wRatio = maxWidth/images[number].width;
+	}
+	if(images[number].height > maxHeight)
+	{
+		hRatio = maxHeight/images[number].height;
+	}
+	if(wRatio >= hRatio){
+		images[number].width *= hRatio;
+		images[number].height *= hRatio;
+	}
+	else{
+		images[number].width *= wRatio;
+		images[number].height *= wRatio;
+	}
+
+	//draw image
 	sCtx.drawImage(images[number], (sCanvas.width-images[number].width)*0.5, (sCanvas.height-images[number].height)*0.5, images[number].width, images[number].height);
+	
+	//caption
 	if(images[number].caption === undefined){
 		images[number].caption = prefs.defaultCaption;
 	}
-  	cCtx.fillText(images[number].caption, cCanvas.width*0.5, (cCanvas.height+cdFontSize*0.2)*0.5);
+	cCtx.fillText(images[number].caption, cCanvas.width*0.5, (cCanvas.height+cdFontSize*0.2)*0.5);
 }
-
 function theLoop(){
 	countdown();
 }
@@ -206,6 +216,7 @@ function changeSecs(){
 		changeMins();
 	}
 	secsLeft--;
+
 }
 
 function changeMins(){
@@ -217,7 +228,7 @@ function changeMins(){
 }
 
 function changeHours(){
-	
+
 	if(hoursLeft===0){
 		hoursLeft = 24;
 		changeDays();
