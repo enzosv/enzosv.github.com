@@ -6,8 +6,12 @@ function addHead(){
 	var titleText = document.createTextNode('enzosv');
 	title.appendChild(titleText);
 	body.appendChild(title);
+	var home = document.createElement('a');
+	var homeText = document.createTextNode('Home ');
+	home.appendChild(homeText);
+	home.href = '/';
+	body.appendChild(home);
 
-	addLink('Index');
 	addLink('Pong');
 	addLink('Invasion');
 	addLink('Nbody');
