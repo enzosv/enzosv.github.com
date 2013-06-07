@@ -25,72 +25,141 @@ function Ball(){
 	this.horizontal = 0;
 	this.accelerationX = width*0.5;
 	this.accelerationY = height*0.5;
+	this.p = 0;
 	this.draw = function(){
 		ctx.drawImage(this.image, this.center.x-this.radius, this.center.y-this.radius, this.radius*2, this.radius*2)
 	}
 	this.control = function(){
-		if(Key.isDown(Key.W) || Key.isDown(Key.UP) || Key.isDown(Key.S) || Key.isDown(Key.DOWN)){
-			if(this.speedY < maxSpeed){
-				this.speedY += delta*this.accelerationY;
-				if(this.speedY > maxSpeed){
-					this.speedY = maxSpeed;
+		if(this.p === 1){
+			if(Key.isDown(Key.W) || Key.isDown(Key.S)){
+				if(this.speedY < maxSpeed){
+					this.speedY += delta*this.accelerationY;
+					if(this.speedY > maxSpeed){
+						this.speedY = maxSpeed;
+					}
 				}
-			}
 
-			if(Key.isDown(Key.W) || Key.isDown(Key.UP)){
-				if(this.vertical != -1){
-					this.speedY -= delta*this.accelerationY*4;
-					if(this.speedY < 0){
-						this.vertical = -1;
+				if(Key.isDown(Key.W)){
+					if(this.vertical != -1){
+						this.speedY -= delta*this.accelerationY*4;
+						if(this.speedY < 0){
+							this.vertical = -1;
+						}
+					}
+				}
+				else{
+					if(this.vertical != 1){
+						this.speedY -= delta*this.accelerationY*4;
+						if(this.speedY < 0){
+							this.vertical = 1;
+						}
 					}
 				}
 			}
 			else{
-				if(this.vertical != 1){
-					this.speedY -= delta*this.accelerationY*4;
-					if(this.speedY < 0){
-						this.vertical = 1;
+				this.speedY -= delta*this.accelerationY*2;
+				if(this.speedY < 0){
+					this.speedY = 0;
+					this.vertical = 0;
+				}
+			}
+
+			if(Key.isDown(Key.A)|| Key.isDown(Key.D)){
+				if(this.speedX < maxSpeed){
+					this.speedX += delta*this.accelerationX;
+					if(this.speedX > maxSpeed){
+						this.speedX = maxSpeed;
 					}
 				}
-			}
-		}
-		else{
-			this.speedY -= delta*this.accelerationY*2;
-			if(this.speedY < 0){
-				this.speedY = 0;
-				this.vertical = 0;
-			}
-		}
-
-		if(Key.isDown(Key.A) || Key.isDown(Key.LEFT) || Key.isDown(Key.D) || Key.isDown(Key.RIGHT)){
-			if(this.speedX < maxSpeed){
-				this.speedX += delta*this.accelerationX;
-				if(this.speedX > maxSpeed){
-					this.speedX = maxSpeed;
+				if(Key.isDown(Key.A)){
+					if(this.horizontal != -1){
+						this.speedX -= delta*this.accelerationX*4;
+						if(this.speedX < 0){
+							this.horizontal = -1;
+						}
+					}
 				}
-			}
-			if(Key.isDown(Key.A) || Key.isDown(Key.LEFT)){
-				if(this.horizontal != -1){
-					this.speedX -= delta*this.accelerationX*4;
-					if(this.speedX < 0){
-						this.horizontal = -1;
+				else{
+					if(this.horizontal != 1){
+						this.speedX -= delta*this.accelerationX*4;
+						if(this.speedX < 0){
+							this.horizontal = 1;
+						}
 					}
 				}
 			}
 			else{
-				if(this.horizontal != 1){
-					this.speedX -= delta*this.accelerationX*4;
-					if(this.speedX < 0){
-						this.horizontal = 1;
-					}
+				this.speedX -= delta*this.accelerationX*2;
+				if(this.speedX < 0){
+					this.speedX = 0;
+					this.horizontal = 0;
 				}
 			}
 		}
-		else{
-			this.speedX -= delta*this.accelerationX*2;
-			if(this.speedX < 0){
-				this.speedX = 0;
-				this.horizontal = 0;
+		else if(this.p === 2){
+			if(Key.isDown(Key.UP) || Key.isDown(Key.DOWN)){
+				if(this.speedY < maxSpeed){
+					this.speedY += delta*this.accelerationY;
+					if(this.speedY > maxSpeed){
+						this.speedY = maxSpeed;
+					}
+				}
+
+				if(Key.isDown(Key.UP)){
+					if(this.vertical != -1){
+						this.speedY -= delta*this.accelerationY*4;
+						if(this.speedY < 0){
+							this.vertical = -1;
+						}
+					}
+				}
+				else{
+					if(this.vertical != 1){
+						this.speedY -= delta*this.accelerationY*4;
+						if(this.speedY < 0){
+							this.vertical = 1;
+						}
+					}
+				}
+			}
+			else{
+				this.speedY -= delta*this.accelerationY*2;
+				if(this.speedY < 0){
+					this.speedY = 0;
+					this.vertical = 0;
+				}
+			}
+
+			if(Key.isDown(Key.LEFT) || Key.isDown(Key.RIGHT)){
+				if(this.speedX < maxSpeed){
+					this.speedX += delta*this.accelerationX;
+					if(this.speedX > maxSpeed){
+						this.speedX = maxSpeed;
+					}
+				}
+				if(Key.isDown(Key.LEFT)){
+					if(this.horizontal != -1){
+						this.speedX -= delta*this.accelerationX*4;
+						if(this.speedX < 0){
+							this.horizontal = -1;
+						}
+					}
+				}
+				else{
+					if(this.horizontal != 1){
+						this.speedX -= delta*this.accelerationX*4;
+						if(this.speedX < 0){
+							this.horizontal = 1;
+						}
+					}
+				}
+			}
+			else{
+				this.speedX -= delta*this.accelerationX*2;
+				if(this.speedX < 0){
+					this.speedX = 0;
+					this.horizontal = 0;
+				}
 			}
 		}
 	}
@@ -138,8 +207,8 @@ function Guard(){
 	this.prisoner = prisoners[0];
 	this.select = function(){
 		for(var i = 0; i<prisoners.length; i++){
-			if(this.center.distance(this.prisoner) < this.center.distance(prisoners[i])){
-				this.prisoner = prisoner[i];
+			if(this.center.distance(this.prisoner.center) > this.center.distance(prisoners[i].center)){
+				this.prisoner = prisoners[i];
 			}
 		}
 	}
@@ -181,8 +250,9 @@ function Guard2(){
 	this.prisoner = prisoners[0];
 	this.select = function(){
 		for(var i = 0; i<prisoners.length; i++){
-			if(this.center.distance(this.prisoner) < this.center.distance(prisoners[i])){
-				this.prisoner = prisoner[i];
+			if(this.center.distance(this.prisoner.center) > this.center.distance(prisoners[i].center)){
+				this.prisoner = prisoners[i];
+
 			}
 		}
 	}
@@ -247,8 +317,14 @@ function init(){
 	gameObjects = [];
 	guards = [];
 	prisoners = [];
+
 	prisoners[0] = new Ball();
+	prisoners[0].p = 1;
+
 	gameObjects.push(prisoners[0]);
+	prisoners[1] = new Ball();
+	prisoners[1].p = 2;
+	gameObjects.push(prisoners[1]);
 
 	for(var i = 0; i< 5; i++){
 		guards[i] = new Guard();
