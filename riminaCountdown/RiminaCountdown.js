@@ -36,22 +36,13 @@ function init(){
 	images = [];
 
 	loadCounter = 0;
-	canAddImage = false;
+	canAddImage = true;
 	imageCount = prefs.imageCount;
 
 	for(var i = 0; i< imageCount; i++){
 		images[i] = new Image();
 		images[i].src = (i+1) + '.jpg';
 		images[i].caption = captions[i];
-		images[i].addEventListener("load", function () {
-			loadCounter++;
-
-			if(!canAddImage && loadCounter === imageCount){
-				canAddImage = true;
-				addImage(Math.floor(Math.random()*imageCount));
-
-			}
-		}, false);
 	}
 	whiteColor = prefs.whiteColor;
 
@@ -190,7 +181,6 @@ function addImage(number){
 
 	//draw image
 	sCtx.drawImage(images[number], (sCanvas.width-images[number].width)*0.5, (sCanvas.height-images[number].height)*0.5, images[number].width, images[number].height);
-	
 	//caption
 	if(images[number].caption === undefined){
 		images[number].caption = prefs.defaultCaption;
