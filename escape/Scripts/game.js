@@ -30,6 +30,11 @@ function Ball(number){
 	this.p = number;
 	this.scored = [];
 	this.active = false;
+	this.up = false;
+	this.down = false;
+	this.left = false;
+	this.right = false;
+
 	gameObjects.push(this);
 	for(var i = 0; i< 10; i++){
 		this.scored[i] = false;
@@ -38,56 +43,46 @@ function Ball(number){
 		ctx.drawImage(this.image, this.center.x-this.radius, this.center.y-this.radius, this.radius*2, this.radius*2)
 	}
 	this.control = function(){
-		if(this.p === 1){
-			if(Key.isDown(Key.W) || Key.isDown(Key.S)){
-				speedUpY(this);
-				if(Key.isDown(Key.W)){
-					changeDirY(this, -1);
+		if(this.up || this.down){
+			if (this.speedY < maxSpeed) {
+				this.speedY += delta * this.accelerationY;
+				if (this.speedY > maxSpeed) {
+					this.speedY = maxSpeed;
 				}
-				else{
-					changeDirY(this, 1);
-				}
+			}
+			if(this.up){
+				changeDirY(this, -1);
 			}
 			else{
-				slowDownY(this);
-			}
-			if(Key.isDown(Key.A)|| Key.isDown(Key.D)){
-				speedUpX(this);
-				if(Key.isDown(Key.A)){
-					changeDirX(this, -1);
-				}
-				else{
-					changeDirX(this, 1);
-				}
-			}
-			else{
-				slowDownX(this);
+				changeDirY(this, 1);
 			}
 		}
-		else if(this.p === 2){
-			if(Key.isDown(Key.UP) || Key.isDown(Key.DOWN)){
-				speedUpY(this);
-				if(Key.isDown(Key.UP)){
-					changeDirY(this, -1);
+		else{
+			this.speedY -= delta*this.accelerationY*2;
+			if(this.speedY < 0){
+				this.speedY = 0;
+				this.vertical = 0;
+			}
+		}
+		if(this.left || this.right){
+			if (this.speedX < maxSpeed) {
+				this.speedX += delta * this.accelerationX;
+				if (this.speedX > maxSpeed) {
+					this.speedX = maxSpeed;
 				}
-				else{
-					changeDirY(this, 1);
-				}
+			}
+			if(this.left){
+				changeDirX(this, -1);
 			}
 			else{
-				slowDownY(this);
+				changeDirX(this, 1);
 			}
-			if(Key.isDown(Key.LEFT) || Key.isDown(Key.RIGHT)){
-				speedUpX(this);
-				if(Key.isDown(Key.LEFT)){
-					changeDirX(this, -1);
-				}
-				else{
-					changeDirX(this, 1);
-				}
-			}
-			else{
-				slowDownX(this);
+		}
+		else{
+			this.speedX -= delta*this.accelerationX*2;
+			if(this.speedX < 0){
+				this.speedX = 0;
+				this.horizontal = 0;
 			}
 		}
 	}
@@ -242,9 +237,11 @@ var Key = {
 	},
 	onKeydown: function (e) {
 		this.pressed[e.keyCode] = true;
+		controlMap();
 	},
 	onKeyup: function (e) {
 		delete this.pressed[e.keyCode];
+		controlMap();
 	}
 }
 
@@ -357,36 +354,72 @@ function changeDirY(object, direction) {
 	}
 }
 
-function speedUpX(object) {
-	if (object.speedX < maxSpeed) {
-		object.speedX += delta * object.accelerationX;
-		if (object.speedX > maxSpeed) {
-			object.speedX = maxSpeed;
-		}
-	}
-}
+function controlMap(){
+	if(Key.isDown(Key.W))
+		prisoners[0].up = true;
+	else
+		prisoners[0].up = false;
+	if(Key.isDown(Key.S))
+		prisoners[0].down = true;
+	else
+		prisoners[0].down = false;
+	if(Key.isDown(Key.A))
+		prisoners[0].left = true;
+	else
+		prisoners[0].left = false;
+	if(Key.isDown(Key.D))
+		prisoners[0].right = true;
+	else
+		prisoners[0].right = false;
 
-function speedUpY(object) {
-	if (object.speedY < maxSpeed) {
-		object.speedY += delta * object.accelerationY;
-		if (object.speedY > maxSpeed) {
-			object.speedY = maxSpeed;
-		}
-	}
-}
+	if(Key.isDown(Key.UP))
+		prisoners[1].up = true;
+	else
+		prisoners[1].up = false;
+	if(Key.isDown(Key.DOWN))
+		prisoners[1].down = true;
+	else
+		prisoners[1].down = false;
+	if(Key.isDown(Key.LEFT))
+		prisoners[1].left = true;
+	else
+		prisoners[1].left = false;
+	if(Key.isDown(Key.RIGHT))
+		prisoners[1].right = true;
+	else
+		prisoners[1].right = false;
 
-function slowDownY(object) {
-	object.speedY -= delta*object.accelerationY*2;
-	if(object.speedY < 0){
-		object.speedY = 0;
-		object.vertical = 0;
-	}
-}
+	if(Key.isDown(Key.N8))
+		prisoners[2].up = true;
+	else
+		prisoners[2].up = false;
+	if(Key.isDown(Key.N5))
+		prisoners[2].down = true;
+	else
+		prisoners[2].down = false;
+	if(Key.isDown(Key.N4))
+		prisoners[2].left = true;
+	else
+		prisoners[2].left = false;
+	if(Key.isDown(Key.N6))
+		prisoners[2].right = true;
+	else
+		prisoners[2].right = false;
 
-function slowDownX(object) {
-	object.speedX -= delta*object.accelerationX*2;
-	if(object.speedX < 0){
-		object.speedX = 0;
-		object.horizontal = 0;
-	}
+	if(Key.isDown(Key.I))
+		prisoners[3].up = true;
+	else
+		prisoners[3].up = false;
+	if(Key.isDown(Key.K))
+		prisoners[3].down = true;
+	else
+		prisoners[3].down = false;
+	if(Key.isDown(Key.J))
+		prisoners[3].left = true;
+	else
+		prisoners[3].left = false;
+	if(Key.isDown(Key.L))
+		prisoners[3].right = true;
+	else
+		prisoners[3].right = false;
 }
