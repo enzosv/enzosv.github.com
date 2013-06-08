@@ -24,8 +24,9 @@ var secsLeft;
 
 var images;
 var imageCount;
-var loadCounter;
-var canAddImage;
+
+var loaded;
+var timeOnScreen;
 function main(){
 	init();
 	setInterval(theLoop, 1000);
@@ -34,20 +35,25 @@ function main(){
 function init(){
 	initTime();
 	images = [];
-
-	loadCounter = 0;
-	canAddImage = true;
+	loaded = [];
 	imageCount = prefs.imageCount;
+	whiteColor = prefs.whiteColor;
+	timeOnScreen = 0;
+	createCanvas();
 
 	for(var i = 0; i< imageCount; i++){
 		images[i] = new Image();
 		images[i].src = (i+1) + '.jpg';
 		images[i].caption = captions[i];
-	}
-	whiteColor = prefs.whiteColor;
 
-	createCanvas();
+		images[i].addEventListener("load",function(){
+			loaded.push(this);
+			addImage(Math.floor(Math.random()*loaded.length));
+		},false);
+	}
+	
 	resize();
+	
 }
 
 function initTime(){
@@ -68,6 +74,7 @@ window.onresize = function(event) {
 	cdCtx.clearRect(0,0,cdWidth,cdHeight);
 	lCtx.clearRect(0,0,cdWidth,cdHeight);
 	resize();
+	addImage(Math.floor(Math.random()*imageCount));
 }
 
 function resize(){
@@ -82,7 +89,6 @@ function resize(){
 	cdFontSize = cdWidth*cdHeight*prefs.fontMultiplier;
 
 	setCanvas();
-	addImage(Math.floor(Math.random()*imageCount));
 }
 
 function createCanvas(){
@@ -143,55 +149,53 @@ function setCanvas(){
 }
 
 function writeLabel(){
-
 	lCtx.fillText("days", labelCanvas.width*0.2, labelCanvas.height*0.9);
 	lCtx.fillText("hours", labelCanvas.width*0.39, labelCanvas.height*0.9);
 	lCtx.fillText("mins", labelCanvas.width*0.577, labelCanvas.height*0.9);
 	lCtx.fillText("secs", labelCanvas.width*0.765, labelCanvas.height*0.9);
-
 }
 
 function addImage(number){
+	timeOnScreen = 0;
 	//http://stackoverflow.com/questions/2303690/resizing-an-image-in-an-html5-canvas
 	var maxWidth = cdWidth;
 	var maxHeight = height*0.55;
 	var wRatio = 1;
 	var hRatio = 1;
-	//erase
 	sCtx.clearRect(0,0,sCanvas.width, sCanvas.height);
 	cCtx.clearRect(0,0,cCanvas.width, cCanvas.height);
-
-	//resize
-	if(images[number].width > maxWidth)
+	var img = loaded[number];
+	if(img.width > maxWidth)
 	{
-		wRatio = maxWidth/images[number].width;
+		wRatio = maxWidth/img.width;
 	}
-	if(images[number].height > maxHeight)
+	if(img.height > maxHeight)
 	{
-		hRatio = maxHeight/images[number].height;
+		hRatio = maxHeight/img.height;
 	}
 	if(wRatio >= hRatio){
-		images[number].width *= hRatio;
-		images[number].height *= hRatio;
+		img.width *= hRatio;
+		img.height *= hRatio;
 	}
 	else{
-		images[number].width *= wRatio;
-		images[number].height *= wRatio;
+		img.width *= wRatio;
+		img.height *= wRatio;
 	}
 
-	//draw image
-	sCtx.drawImage(images[number], (sCanvas.width-images[number].width)*0.5, (sCanvas.height-images[number].height)*0.5, images[number].width, images[number].height);
-	//caption
-	if(images[number].caption === undefined){
-		images[number].caption = prefs.defaultCaption;
+	sCtx.drawImage(img, (sCanvas.width-img.width)*0.5, (sCanvas.height-img.height)*0.5,img.width, img.height);
+
+	if(img.caption === undefined){
+		img.caption = prefs.defaultCaption;
 	}
-	cCtx.fillText(images[number].caption, cCanvas.width*0.5, (cCanvas.height+cdFontSize*0.2)*0.5);
+	cCtx.fillText(img.caption, cCanvas.width*0.5, (cCanvas.height+cdFontSize*0.2)*0.5);
 }
 function theLoop(){
 	countdown();
+	
 }
 
 function countdown(){
+
 	timeLeft = arrivalTime-new Date().getTime();
 	changeSecs();
 	cdCtx.clearRect(0,0,cdWidth, cdHeight);
@@ -202,10 +206,13 @@ function countdown(){
 function changeSecs(){
 	if(secsLeft===0){
 		secsLeft = 60;
-		addImage(Math.floor(Math.random()*imageCount));
 		changeMins();
 	}
 	secsLeft--;
+	timeOnScreen++;
+	if(timeOnScreen >= 600/imageCount){
+		addImage(Math.floor(Math.random()*imageCount));
+	}
 
 }
 
