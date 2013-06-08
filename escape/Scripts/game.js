@@ -28,6 +28,10 @@ function Ball(){
 	this.accelerationX = width*0.5;
 	this.accelerationY = height*0.5;
 	this.p = 0;
+	this.scored = [];
+	for(var i = 0; i< 10; i++){
+		this.scored[i] = false;
+	}
 	this.draw = function(){
 		ctx.drawImage(this.image, this.center.x-this.radius, this.center.y-this.radius, this.radius*2, this.radius*2)
 	}
@@ -89,6 +93,15 @@ function Ball(){
 		this.center.x += this.horizontal*delta*this.speedX;
 		this.center.y += this.vertical*delta*this.speedY;
 	}
+	this.score = function(){
+		// for(var i = 10; i>0; i--){
+		// 	if(this.center.y > height*(0.1 + i*0.2)){
+		// 		score += i*2;
+		// 		this.scored[i]
+		// 		alert(score);
+		// 	}
+		// }
+	}
 	this.boundWall = function(){
 		if(this.center.x - this.radius < 0){
 			this.center.x = this.radius;
@@ -117,6 +130,7 @@ function Ball(){
 	this.update = function(){
 		this.control();
 		this.move();
+		this.score();
 		this.collide();
 		this.boundWall();
 	}
@@ -242,13 +256,13 @@ function init(){
 	prisoners[1].p = 2;
 	gameObjects.push(prisoners[1]);
 
-	for(var i = 0; i< 5; i++){
+	for(var i = 0; i< 4; i++){
 		guards[i] = new Guard();
-		guards[i].center.y = height*(0.1+0.2*i);
+		guards[i].center.y = height*(0.1+0.25*i);
 		gameObjects.push(guards[i]);
 	}
-	guards[5] = new Guard2();
-	gameObjects.push(guards[5]);
+	guards[4] = new Guard2();
+	gameObjects.push(guards[4]);
 
 	window.addEventListener('keyup', function (event) {
 		Key.onKeyup(event);
