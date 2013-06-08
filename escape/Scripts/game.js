@@ -16,7 +16,7 @@ var old;
 
 var score;
 
-function Ball(){
+function Ball(number){
 	this.radius = width*height*0.00001;
 	this.center = new Vector(width*0.5, this.radius);
 	this.image = new Image();
@@ -27,8 +27,10 @@ function Ball(){
 	this.horizontal = 0;
 	this.accelerationX = width*0.5;
 	this.accelerationY = height*0.5;
-	this.p = 0;
+	this.p = number;
 	this.scored = [];
+	this.active = false;
+	gameObjects.push(this);
 	for(var i = 0; i< 10; i++){
 		this.scored[i] = false;
 	}
@@ -142,6 +144,7 @@ function Guard(){
 	this.halfWidth = width*0.125;
 	this.halfHeight = height * 0.005;
 	this.prisoner = prisoners[0];
+	this.active = true;
 	this.move = function(){
 		if(Math.abs(this.prisoner.center.x - this.center.x) > this.prisoner.radius){
 			if(this.prisoner.center.x < this.center.x){
@@ -178,6 +181,7 @@ function Guard2(){
 	this.halfWidth = height * 0.005;
 	this.halfHeight = width*0.125;
 	this.prisoner = prisoners[0];
+	this.active = true;
 	this.select = function(){
 		for(var i = 0; i<prisoners.length; i++){
 			if(this.center.distance(this.prisoner.center) > this.center.distance(prisoners[i].center)){
@@ -225,6 +229,14 @@ var Key = {
 	S: 83,
 	A: 65,
 	D: 68,
+	N8: 104,
+	N5: 101,
+	N4: 100,
+	N6: 102,
+	I: 73,
+	K: 75,
+	J: 74,
+	L: 76,
 	isDown: function (keyCode) {
 		return this.pressed[keyCode];
 	},
@@ -247,14 +259,10 @@ function init(){
 	gameObjects = [];
 	guards = [];
 	prisoners = [];
-
-	prisoners[0] = new Ball();
-	prisoners[0].p = 1;
-
-	gameObjects.push(prisoners[0]);
-	prisoners[1] = new Ball();
-	prisoners[1].p = 2;
-	gameObjects.push(prisoners[1]);
+	for(var i = 0; i< 4; i++){
+		prisoners[i] = new Ball(i+1);
+	}
+	prisoners[0].active = true;
 
 	for(var i = 0; i< 4; i++){
 		guards[i] = new Guard();
@@ -291,33 +299,37 @@ function prepare(){
 	delta = (Date.now() - old)/1000;
 	old = Date.now();
 	ctx.clearRect(0,0,width, height);
+	if(!prisoners[1].active && Key.isDown(Key.UP)){
+		prisoners[1].active = true;
+	}
+	else if(!prisoners[2].active && Key.isDown(Key.N8)){
+		prisoners[2].active = true;
+	}
+	else if(!prisoners[3].active && Key.isDown(Key.I)){
+		prisoners[3].active = true;
+	}
 }
 
 function update(){
-
 	for(var i = 0; i< gameObjects.length; i++){
-		gameObjects[i].update();
+		if(gameObjects[i].active){
+			gameObjects[i].update();
+			gameObjects[i].draw();
+		}
 	}
 
-}
-
-function draw(){
-	for(var i = 0; i< gameObjects.length; i++){
-		gameObjects[i].draw();
-	}
 }
 
 function gameLoop(){
 	prepare();
 	update();
-	draw();
 	requestAnimFrame(gameLoop);
 }
 
 function selectPrisoner(object){
 	var distFromClosest = 2000;
 	for(var i = 0; i<prisoners.length; i++){
-		if(Math.abs(prisoners[i].center.y-object.center.y) < height*0.2){
+		if(prisoners[i].active && Math.abs(prisoners[i].center.y-object.center.y) < height*0.2){
 			var distToCompare = object.center.distance(prisoners[i].center);
 			if (distToCompare < distFromClosest) {
 				object.prisoner = this.prisoners[i];
