@@ -338,7 +338,7 @@ function selectPrisoner(object){
 
 function changeDirX(object, direction) {
 	if (object.horizontal != direction) {
-		object.speedX -= delta * object.accelerationX * 4;
+		object.speedX -= delta * object.accelerationX * 3.5;
 		if (object.speedX < 0) {
 			object.horizontal = direction;
 		}
@@ -347,7 +347,7 @@ function changeDirX(object, direction) {
 
 function changeDirY(object, direction) {
 	if (object.vertical != direction) {
-		object.speedY -= delta * object.accelerationY * 4;
+		object.speedY -= delta * object.accelerationY * 3.5;
 		if (object.speedY < 0) {
 			object.vertical = direction;
 		}
