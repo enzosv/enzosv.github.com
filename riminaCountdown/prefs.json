@@ -1,7 +1,7 @@
 var prefs = {
-	"imageCount":45,
+	"imageCount":17,
 	"slideShowInterval":20,
-	"arrivalDate":"June 17, 2013 03:30:00",
+	"arrivalDate":"October 27, 2013 00:00:00",
 	"defaultCaption":"",
 	"whiteColor":"rgba(255,255,255,1)",
 	"fontMultiplier":0.0008
