@@ -81,6 +81,7 @@ function addLetter(letter){
     letterImages.push(image);
     image.addEventListener("load", function () {
         letterCount++;
+        alert((letterCount + successCount) + " " + (imageNames.length + 26));
         if (letterCount + successCount === images.length + letterImages.length) {
             drawImages();
         }
@@ -101,6 +102,7 @@ function addImage(name) {
         items[successCount] = new Item(name);
         items[successCount].image = image;
         successCount++;
+        alert((letterCount + successCount) + " " + (imageNames.length + 26));
         if (letterCount + successCount === images.length + letterImages.length) {
             drawImages();
         }
