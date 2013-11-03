@@ -75,7 +75,7 @@ function addLetter(letter){
     image.name = letter;
 
     letterImages.push(image);
-    alert("loading: " + str.charAt(j));
+    alert("loading: " + letter);
     image.addEventListener("load", function () {
         letterCount++;
         alert("loaded: " + letter);
