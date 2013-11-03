@@ -71,14 +71,14 @@ function win(){
 function addLetter(letter){
     var letterItem = new Image();
 
-    letterItem.src = 'Images/' + letter + '.png';
+    letterItem.src = 'Images/' + letter + '.PNG';
     letterItem.name = letter;
 
     letterImages.push(letterItem);
-    alert("loading: " + letter);
+    
     letterItem.addEventListener("load", function () {
-        letterCount++;
         alert("loaded: " + letter);
+        letterCount++;
         if (letterCount + successCount === imageNames.length +26) {
             drawImages();
         }
