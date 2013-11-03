@@ -138,6 +138,7 @@ function drawImages(){
     else{
         imageSize = width *0.5/rows;
     }
+    alert(imageSize);
     halfSize = imageSize *0.5;
     fourthSize = imageSize *0.25;
     
