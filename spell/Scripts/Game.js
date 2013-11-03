@@ -42,13 +42,12 @@ function LoadContent(){
 	drawCanvas();
 	drawLoading();
     var str = "abcdefghijklmnopqrstuvwxyz";
-    for(var i=0; i<str.length; i++)
-    {
-      addLetter(str.charAt(i));
+    for(var j=0; j<str.length; j++){
+        addLetter(str.charAt(j));
     }
-  for(var i = 0; i<imageNames.length; i++){
-    addImage(imageNames[i]);
-}
+    for(var i = 0; i<imageNames.length; i++){
+        addImage(imageNames[i]);
+    }
 }
 
 function drawCanvas() {
