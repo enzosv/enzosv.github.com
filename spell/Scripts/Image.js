@@ -29,20 +29,7 @@ Item.prototype.getClicked = function(){
 		lettersToClick[i].setPosition();
 		lettersToClick[i].draw();
 	}
-	// lettersToClick.sort();
-	// alert(lettersToClick[0].name);
-	// for(var a = 0; a<letters.length*0.5; a++){
-	// 	lettersToClick[Math.floor((letters.length-a)*0.5)].posX = width*0.5- a*imageSize;
-	// }
-	// for(var b = Math.floor(letters.length*0.5); b<letters.length; b++){
-	// 	lettersToClick[Math.floor((letters.length+b)*0.5)].posX = width*0.5+ b*imageSize;
-	// }
-
-	// for(var j = 0; j<letters.length; j++){
-
-	// 	lettersToClick[i].setPosition();
-	// 	lettersToClick[i].draw();
-	// }
+	alert(lettersToClick[0].posY);
 	
 }
 
