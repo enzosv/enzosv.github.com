@@ -81,6 +81,7 @@ function addLetter(letter){
     letterImages.push(image);
     image.addEventListener("load", function () {
         letterCount++;
+        alert("loaded: " + letter);
         //alert((letterCount + successCount) + " " + (imageNames.length + 26));
         if (letterCount + successCount === images.length +26) {
             drawImages();
@@ -102,6 +103,7 @@ function addImage(name) {
         items[successCount] = new Item(name);
         items[successCount].image = image;
         successCount++;
+        alert("loaded: " + image.name);
         //alert((letterCount + successCount) + " " + (imageNames.length + 26));
         if (letterCount + successCount === images.length + 26) {
             drawImages();
@@ -138,7 +140,6 @@ function drawImages(){
     else{
         imageSize = width *0.5/rows;
     }
-    alert(imageSize);
     halfSize = imageSize *0.5;
     fourthSize = imageSize *0.25;
     
