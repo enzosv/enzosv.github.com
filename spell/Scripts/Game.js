@@ -73,7 +73,7 @@ function win(){
 
 function addLetter(letter){
     var image = new Image();
-
+    alert("loading: " + letter)
     image.src = 'Images/' + letter + '.png';
     image.name = letter;
 
