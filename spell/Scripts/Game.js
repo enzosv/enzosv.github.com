@@ -39,9 +39,7 @@ function LoadContent(){
 	drawCanvas();
 	drawLoading();
     var str = "abcdefghijklmnopqrstuvwxyz";
-    alert(str.length);
     for(var j=0; j<str.length; j++){
-        
         addLetter(str.charAt(j));
     }
     for(var i = 0; i<imageNames.length; i++){
@@ -81,7 +79,6 @@ function addLetter(letter){
     image.addEventListener("load", function () {
         letterCount++;
         alert("loaded: " + letter);
-        //alert((letterCount + successCount) + " " + (imageNames.length + 26));
         if (letterCount + successCount === images.length +26) {
             drawImages();
         }
@@ -102,8 +99,6 @@ function addImage(name) {
         items[successCount] = new Item(name);
         items[successCount].image = image;
         successCount++;
-        alert("loaded: " + image.name);
-        //alert((letterCount + successCount) + " " + (imageNames.length + 26));
         if (letterCount + successCount === images.length + 26) {
             drawImages();
         }
