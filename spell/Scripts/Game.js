@@ -81,7 +81,7 @@ function addLetter(letter){
     letterImages.push(image);
     image.addEventListener("load", function () {
         letterCount++;
-        alert((letterCount + successCount) + " " + (imageNames.length + 26));
+        //alert((letterCount + successCount) + " " + (imageNames.length + 26));
         if (letterCount + successCount === images.length + letterImages.length) {
             drawImages();
         }
@@ -102,7 +102,7 @@ function addImage(name) {
         items[successCount] = new Item(name);
         items[successCount].image = image;
         successCount++;
-        alert((letterCount + successCount) + " " + (imageNames.length + 26));
+        //alert((letterCount + successCount) + " " + (imageNames.length + 26));
         if (letterCount + successCount === images.length + letterImages.length) {
             drawImages();
         }
@@ -221,7 +221,7 @@ function updateLoading() {
     var loadContext = document.getElementById('loading').getContext('2d');
     loadContext.clearRect(0, 0, 230, 20);
     loadContext.fillStyle = 'rgb(255,0,0)';
-    loadContext.fillRect(0, 0, successCount*230/(images.length-1), 20);
+    loadContext.fillRect(0, 0, (successCount+letterCount)*230/(imageNames.length+25), 20);
     
     // loadContext.fillRect((successCount - 1) * 20 + 30, 0, 100/images.length * successCount, 20);
     // loadContext.fillStyle = colorWhite;

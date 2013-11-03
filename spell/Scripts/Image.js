@@ -29,7 +29,6 @@ Item.prototype.getClicked = function(){
 		lettersToClick[i].setPosition();
 		lettersToClick[i].draw();
 	}
-	alert(lettersToClick[0].posY);
 	
 }
 
