@@ -43,6 +43,7 @@ function LoadContent(){
 	drawLoading();
     var str = "abcdefghijklmnopqrstuvwxyz";
     for(var j=0; j<str.length; j++){
+        alert("loading: " + str.charAt(j));
         addLetter(str.charAt(j));
     }
     for(var i = 0; i<imageNames.length; i++){
@@ -73,7 +74,7 @@ function win(){
 
 function addLetter(letter){
     var image = new Image();
-    alert("loading: " + letter)
+
     image.src = 'Images/' + letter + '.png';
     image.name = letter;
 
