@@ -2,6 +2,7 @@ var target;
 var letters;
 var correct;
 var images;
+var letterCount;
 var successCount;
 var items;
 
@@ -32,6 +33,7 @@ function Initialize(){
     letterImages = [];
     
     successCount = 0;
+    letterCount = 0;
     selectingImage = true;
     LoadContent();
 }
@@ -43,7 +45,7 @@ function LoadContent(){
     for(var i=0; i<str.length; i++)
     {
       addLetter(str.charAt(i));
-  }
+    }
   for(var i = 0; i<imageNames.length; i++){
     addImage(imageNames[i]);
 }
@@ -77,7 +79,15 @@ function addLetter(letter){
     image.name = letter;
 
     letterImages.push(image);
-
+    image.addEventListener("load", function () {
+        letterCount++;
+        if (letterCount + successCount === images.length + letterImages.length) {
+            drawImages();
+        }
+        else {
+            updateLoading();
+        }
+    }, false);
 }
 function addImage(name) {
 
@@ -91,8 +101,7 @@ function addImage(name) {
         items[successCount] = new Item(name);
         items[successCount].image = image;
         successCount++;
-        if (successCount === images.length) {
-
+        if (letterCount + successCount === images.length + letterImages.length) {
             drawImages();
         }
         else {
@@ -154,19 +163,19 @@ function drawImages(){
 
 function selectItem(event){
     var x = event.pageX,
-        y = event.pageY;
-        for(var i = 0; i<items.length; i++){
-            if(y > items[i].top && y < items[i].bottom && x > items[i].left && x <items[i].right){
-                centerImage(items[i]);
-                break;
-            }
-        };
-        for(var j = 0; j<lettersToClick.length; j++){
-            if(y > lettersToClick[j].top && y < lettersToClick[j].bottom && x > lettersToClick[j].left && x <lettersToClick[j].right){
-                lettersToClick[j].getClicked();
-                break;
-            }
-        };
+    y = event.pageY;
+    for(var i = 0; i<items.length; i++){
+        if(y > items[i].top && y < items[i].bottom && x > items[i].left && x <items[i].right){
+            centerImage(items[i]);
+            break;
+        }
+    };
+    for(var j = 0; j<lettersToClick.length; j++){
+        if(y > lettersToClick[j].top && y < lettersToClick[j].bottom && x > lettersToClick[j].left && x <lettersToClick[j].right){
+            lettersToClick[j].getClicked();
+            break;
+        }
+    };
 }
 
 function centerImage(clickedItem){
