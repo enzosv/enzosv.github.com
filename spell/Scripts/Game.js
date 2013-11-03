@@ -42,6 +42,7 @@ function LoadContent(){
 	drawCanvas();
 	drawLoading();
     var str = "abcdefghijklmnopqrstuvwxyz";
+    alert(str.length);
     for(var j=0; j<str.length; j++){
         alert("loading: " + str.charAt(j));
         addLetter(str.charAt(j));
