@@ -69,17 +69,17 @@ function win(){
 }
 
 function addLetter(letter){
-    var image = new Image();
+    var letterItem = new Image();
 
-    image.src = 'Images/' + letter + '.png';
-    image.name = letter;
+    letterItem.src = 'Images/' + letter + '.png';
+    letterItem.name = letter;
 
     letterImages.push(image);
     alert("loading: " + letter);
-    image.addEventListener("load", function () {
+    letterItem.addEventListener("load", function () {
         letterCount++;
         alert("loaded: " + letter);
-        if (letterCount + successCount === images.length +26) {
+        if (letterCount + successCount === imageNames.length +26) {
             drawImages();
         }
         else {
@@ -99,7 +99,7 @@ function addImage(name) {
         items[successCount] = new Item(name);
         items[successCount].image = image;
         successCount++;
-        if (letterCount + successCount === images.length + 26) {
+        if (letterCount + successCount === imageNames.length + 26) {
             drawImages();
         }
         else {
