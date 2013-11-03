@@ -8,9 +8,6 @@ var baseRadius;
 var delta;
 var old;
 
-var canvas;
-var ctx;
-
 var images;
 var successCount;
 var gameObjects;
