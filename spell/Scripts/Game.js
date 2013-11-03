@@ -24,9 +24,6 @@ function Initialize(){
 	
 	width = window.innerWidth - 15;
     height = window.innerHeight - 45;
-
-
-    
     items = [];
 
     images = [];
@@ -44,7 +41,7 @@ function LoadContent(){
     var str = "abcdefghijklmnopqrstuvwxyz";
     alert(str.length);
     for(var j=0; j<str.length; j++){
-        alert("loading: " + str.charAt(j));
+        
         addLetter(str.charAt(j));
     }
     for(var i = 0; i<imageNames.length; i++){
@@ -80,6 +77,7 @@ function addLetter(letter){
     image.name = letter;
 
     letterImages.push(image);
+    alert("loading: " + str.charAt(j));
     image.addEventListener("load", function () {
         letterCount++;
         alert("loaded: " + letter);
