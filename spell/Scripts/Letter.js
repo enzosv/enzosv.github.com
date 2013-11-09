@@ -18,9 +18,9 @@ Letter.prototype.getClicked = function(){
 }
 
 Letter.prototype.setPosition = function(){
-	this.top = this.posY - fourthSize;
+	this.top = this.posY - halfSize;
 	this.bottom = this.posY + fourthSize;
-	this.left = this.posX - fourthSize;
+	this.left = this.posX - halfSize;
 	this.right = this.posX + fourthSize;
 }
 
