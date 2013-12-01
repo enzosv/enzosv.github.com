@@ -77,7 +77,6 @@ function addLetter(letter){
     letterImages.push(letterItem);
     
     letterItem.addEventListener("load", function () {
-        alert("loaded: " + letter);
         letterCount++;
         if (letterCount + successCount === imageNames.length +26) {
             drawImages();

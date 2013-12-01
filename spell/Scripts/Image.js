@@ -16,7 +16,7 @@ Item.prototype.getClicked = function(){
 				break;
 			}
 		}
-		lettersToClick[i].posX = width*0.5 + i *imageSize;
+		//lettersToClick[i].posX = width*0.5 + i *imageSize;
 		lettersToClick[i].posY = height*0.8;
 		
 	}
@@ -24,7 +24,7 @@ Item.prototype.getClicked = function(){
 	var middle = Math.floor((lettersToClick.length-1)*0.5);
 	shuffle(lettersToClick);
 	for(var i = 0; i<letters.length; i++){
-		xPositions[i] = width*0.5 + (i-middle)*imageSize;
+		xPositions[i] = width*0.5 + (i-middle)*halfSize;
 		lettersToClick[i].posX = xPositions[i];
 		lettersToClick[i].setPosition();
 		lettersToClick[i].draw();
