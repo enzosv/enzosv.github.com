@@ -286,7 +286,7 @@ var UnityObject2 = function (config) {
      */    
     function _setPluginStatus(status, type, data, url) {
         
-        if (status === kMissing){
+        if (status === kMissing) {
             wasMissing = true;
         }
                 
@@ -314,11 +314,19 @@ var UnityObject2 = function (config) {
         
             var a = nav.userAgent, p = nav.platform;
             var chrome = /chrome/i.test(a);
+
+            //starting from IE 11, IE is using a different UserAgent.
+            var ie = false;
+            if (/msie/i.test(a)){
+                ie = parseFloat(a.replace(/^.*msie ([0-9]+(\.[0-9]+)?).*$/i, "$1"));
+            } else if (/Trident/i.test(a)) {
+                ie = parseFloat(a.replace(/^.*rv:([0-9]+(\.[0-9]+)?).*$/i, "$1"));
+            }
             var ua = {
                 w3 : typeof doc.getElementById != "undefined" && typeof doc.getElementsByTagName != "undefined" && typeof doc.createElement != "undefined",
                 win : p ? /win/i.test(p) : /win/i.test(a),
                 mac : p ? /mac/i.test(p) : /mac/i.test(a),
-                ie : /msie/i.test(a) ? parseFloat(a.replace(/^.*msie ([0-9]+(\.[0-9]+)?).*$/i, "$1")) : false,
+                ie : ie,
                 ff : /firefox/i.test(a),
                 op : /opera/i.test(a),
                 ch : chrome,
@@ -1190,47 +1198,46 @@ var UnityObject2 = function (config) {
                         }, versions);
                         return;
                 }
-            } else if (typeof win.ActiveXObject != "undefined") {
-
+            } else if (ua.ie) {
                 try {
-                        var uo = new ActiveXObject("UnityWebPlayer.UnityWebPlayer.1");
-                        var pv = uo.GetPluginVersion();
+                    var uo = new ActiveXObject("UnityWebPlayer.UnityWebPlayer.1");
+                    var pv = uo.GetPluginVersion();
 
-                        if (versions) {
+                    if (versions) {
 
-                            var v = {};
+                        var v = {};
 
-                            for (var i = 0; i < versions.length; ++i) {
+                        for (var i = 0; i < versions.length; ++i) {
 
-                                v[versions[i]] = uo.GetUnityVersion(versions[i]);
-                            }
-
-                            v.plugin = pv;
+                            v[versions[i]] = uo.GetUnityVersion(versions[i]);
                         }
 
-                        status = kInstalled;
-                        // 2.5.0 auto update has issues on vista and later
-                        if (pv == "2.5.0f5") {
+                        v.plugin = pv;
+                    }
 
-                            var m = /Windows NT \d+\.\d+/.exec(nav.userAgent);
+                    status = kInstalled;
+                    // 2.5.0 auto update has issues on vista and later
+                    if (pv == "2.5.0f5") {
 
-                            if (m && m.length > 0) {
+                        var m = /Windows NT \d+\.\d+/.exec(nav.userAgent);
 
-                                var wv = parseFloat(m[0].split(' ')[2]);
+                        if (m && m.length > 0) {
 
-                                if (wv >= 6) {
+                            var wv = parseFloat(m[0].split(' ')[2]);
 
-                                    status = kBroken;
-                                    data = "WIN-U2.5.0f5";
-                                }
+                            if (wv >= 6) {
+
+                                status = kBroken;
+                                data = "WIN-U2.5.0f5";
                             }
                         }
+                    }
                 } catch (ex) {
-
+                    status = kUnsupported;
                     if (ua.win && ua.ie && ua.x64) {
-
-                        status = kUnsupported;
                         data = "WIN-IEx64";
+                    } else {
+                        data = "ActiveXFailed";
                     }
                 }
             }
@@ -1473,8 +1480,8 @@ var UnityObject2 = function (config) {
                     this.doJavaInstall(cfg.targetEl.id);
                 break;
                 case "ClickOnceIE":
-                   //urlToOpen = this.getClickOnceURL();
-                   //window.location = urlToOpen;
+                   triedClickOnce = true;
+                   _setSessionCookie(triedClickOnceCookie, triedClickOnce);
                    var $iframe = jQuery("<iframe src='" + this.getClickOnceURL() + "' style='display:none;' />");
                    jQuery(cfg.targetEl).append($iframe);
                 break;
